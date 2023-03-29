@@ -1,0 +1,28 @@
+[package]
+name = "snake-game"
+version = "0.1.0"
+edition = "2021"
+description = "a snake game"
+repository = "https://github.com/eurine/snake"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+js-sys = "0.3.61"
+regex = "1.7.2"
+wasm-bindgen = "0.2.84"
+
+
+[dependencies.web-sys]
+version = "0.3.61"
+features = [
+  "Window", "Document", "Element", "HtmlElement",
+  "CssStyleDeclaration", "Navigator", "HtmlButtonElement",
+  "KeyboardEvent"
+]
+
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+rand = "0.8.5"

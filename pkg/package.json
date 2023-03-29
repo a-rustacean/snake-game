@@ -1,0 +1,20 @@
+{
+  "name": "snake-game",
+  "description": "a snake game",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eurine/snake"
+  },
+  "files": [
+    "snake_game_bg.wasm",
+    "snake_game.js",
+    "snake_game.d.ts"
+  ],
+  "module": "snake_game.js",
+  "types": "snake_game.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
