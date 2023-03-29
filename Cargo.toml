@@ -3,7 +3,7 @@ name = "snake-game"
 version = "0.1.0"
 edition = "2021"
 description = "a snake game"
-repository = "https://github.com/eurine/snake"
+repository = "https://github.com/eurine/snake-game"
 license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
