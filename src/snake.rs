@@ -41,7 +41,7 @@ impl Direction {
 pub struct SnakeGame {
     width: usize,
     height: usize,
-    snake: VecDeque<Vector>,
+    pub snake: VecDeque<Vector>,
     foods: Vec<Vector>,
     food_icons: Vec<char>,
     direction: Direction,

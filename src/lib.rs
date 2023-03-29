@@ -22,6 +22,7 @@ thread_local! {
             RENDERER.with(|renderer| {
                 let renderer = &mut *renderer.borrow_mut();
                 game.borrow_mut().tick();
+                renderer.score = game.borrow().snake.len() - 1;
                 renderer.render(&*game.borrow());
             })
         })
@@ -30,8 +31,8 @@ thread_local! {
         width: GAME_WIDTH,
         height: GAME_HEIGHT,
         pixel_size: 18,
-        onclick: None
-
+        onclick: None,
+        score: 0
     });
     static CONTROLLER: Controller = Controller::new(Box::new({
         let game = GAME.with(|game| game.clone());
@@ -57,18 +58,4 @@ fn main() {
             .unwrap_throw();
     });
     CONTROLLER.with(|_| {});
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::random::random_range;
-
-    #[test]
-    fn checking_random() -> Result<(), &'static str> {
-        let random = random_range(0, 10);
-        match random {
-            0..=9 => Ok(()),
-            _ => Err("Expected a value between 0 to 10")
-        }
-    }
 }

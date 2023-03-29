@@ -65,7 +65,7 @@ impl Controller {
                     .unwrap_throw()
                     .dyn_into::<HtmlButtonElement>()
                     .unwrap_throw();
-                top.set_inner_html("^");
+                top.set_inner_html("&uarr;");
                 style!(top {
                     "height": "33%";
                 });
@@ -85,8 +85,8 @@ impl Controller {
                     .unwrap_throw()
                     .dyn_into::<HtmlButtonElement>()
                     .unwrap_throw();
-                left.set_inner_html("<");
-                right.set_inner_html(">");
+                left.set_inner_html("&larr;");
+                right.set_inner_html("&rarr;");
                 style!(middle {
                     "display": "flex";
                     "width": "300px";
@@ -108,7 +108,7 @@ impl Controller {
                     .unwrap_throw()
                     .dyn_into::<HtmlButtonElement>()
                     .unwrap_throw();
-                bottom.set_inner_html("|");
+                bottom.set_inner_html("&darr;");
                 style!(bottom {
                     "height": "33%";
                 });
@@ -149,7 +149,7 @@ impl Controller {
                     "ArrowDown" => Some(Direction::Down),
                     "ArrowLeft" => Some(Direction::Left),
                     "ArrowRight" => Some(Direction::Right),
-                    _ => None
+                    _ => None,
                 };
                 if let Some(direction) = direction {
                     oninput.borrow_mut()(direction);
@@ -157,5 +157,6 @@ impl Controller {
             }
         }) as Box<dyn FnMut(KeyboardEvent)>);
         window.set_onkeydown(keydown_closure.as_ref().dyn_ref());
+        keydown_closure.forget();
     }
 }

@@ -1,17 +1,16 @@
+use crate::helper::Vector;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-#[cfg(target_family = "wasm")]
 use wasm_bindgen::prelude::*;
-#[cfg(target_family = "wasm")]
 use web_sys::{window, HtmlElement};
-use crate::helper::Vector;
 
 pub struct Renderer {
     pub width: usize,
     pub height: usize,
     pub pixel_size: usize,
     pub onclick: Option<Rc<RefCell<Box<dyn FnMut(Vector)>>>>,
+    pub score: usize,
 }
 
 #[allow(dead_code)]
@@ -27,6 +26,7 @@ impl Renderer {
             height,
             pixel_size,
             onclick: None,
+            score: 0,
         };
         if onclick.is_some() {
             renderer.onclick = Some(Rc::new(RefCell::new(onclick.unwrap())));
@@ -46,24 +46,8 @@ impl Default for Renderer {
             height: 10,
             pixel_size: 30,
             onclick: None,
+            score: 0,
         }
-    }
-}
-
-#[cfg(not(target_family = "wasm"))]
-impl Renderer {
-    pub fn render(&mut self, object: &impl Renderable) {
-        let data = object.renderer_data();
-        for y in 0..self.height {
-            let mut str = String::from("");
-            for x in 0..self.width {
-                let value = data.get(&Vector(x as isize, y as isize)).unwrap();
-                str.push_str(&format!("{} ", value));
-            };
-            println!("{}", str);
-        };
-
-        println!("\n\n\n");
     }
 }
 
@@ -75,39 +59,63 @@ macro_rules! style {
     }};
 }
 
-
-#[cfg(target_family = "wasm")]
 impl Renderer {
     pub fn render(&mut self, object: &impl Renderable) {
         let data = object.renderer_data();
         let window = window().unwrap_throw();
         let document = window.document().unwrap_throw();
-        let root = match document.get_element_by_id("display-root") {
-            Some(root) => root.dyn_into().unwrap_throw(),
+        let (display, score_counter) = match document.get_element_by_id("display") {
+            Some(display) => (
+                display.dyn_into().unwrap_throw(),
+                document
+                    .get_element_by_id("score-counter")
+                    .unwrap_throw()
+                    .dyn_into()
+                    .unwrap_throw(),
+            ),
             None => {
                 let root = document
                     .create_element("div")
                     .unwrap_throw()
                     .dyn_into::<HtmlElement>()
                     .unwrap_throw();
+                let display = document
+                    .create_element("div")
+                    .unwrap_throw()
+                    .dyn_into::<HtmlElement>()
+                    .unwrap_throw();
                 let body = document.body().unwrap_throw();
-                root.set_id("display-root");
+                let score_counter = document
+                    .create_element("h3")
+                    .unwrap_throw()
+                    .dyn_into::<HtmlElement>()
+                    .unwrap_throw();
+                root.set_id("renderer-root");
+                display.set_id("display");
+                score_counter.set_id("score-counter");
                 style!(root {
-                    "display": "inline-grid";
-                    "grid-template-columns": &format!("repeat({}, {}px)", self.width, self.pixel_size);
-                    "border": "1px solid black";
                     "position": "absolute";
                     "left": "50vw";
                     "top": "30px";
                     "transform": "translateX(-50%)";
                 });
-                body
-                    .append_child(&root)
-                    .unwrap_throw();
-                root
+                style!(display {
+                    "display": "inline-grid";
+                    "grid-template-columns": &format!("repeat({}, {}px)", self.width, self.pixel_size);
+                    "border": "1px solid black";
+                });
+                style!(score_counter {
+                    "text-align": "center";
+                    "font-family": "Roboto, sans serif";
+                });
+                root.append_child(&display).unwrap_throw();
+                root.append_child(&score_counter).unwrap_throw();
+                body.append_child(&root).unwrap_throw();
+                (display, score_counter)
             }
         };
-        root.set_inner_html("");
+        display.set_inner_html("");
+        score_counter.set_inner_html(&format!("score: {}", self.score));
 
         for y in 0..self.height {
             for x in 0..self.width {
@@ -135,7 +143,7 @@ impl Renderer {
                     "height": &format!("{}px", self.pixel_size)
                 });
 
-                root.append_child(&anchor).unwrap_throw();
+                display.append_child(&anchor).unwrap_throw();
             }
         }
     }
