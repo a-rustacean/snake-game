@@ -1,4 +1,4 @@
-use crate::{helper::{Vector, log, console_log}, random::random_range, renderer::Renderable};
+use crate::{helper::Vector, random::random_range, renderer::Renderable};
 use std::collections::{HashMap, VecDeque};
 use wasm_bindgen::prelude::*;
 
@@ -128,7 +128,6 @@ impl SnakeGame {
             self.foods.remove(i);
             self.food_icons.remove(i);
             self.spawn_food();
-            log!(new_head);
         } else {
             self.snake.pop_back();
         };

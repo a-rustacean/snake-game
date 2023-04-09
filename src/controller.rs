@@ -1,4 +1,4 @@
-use crate::helper::{console_log, log, onclick, style};
+use crate::helper::{onclick, style};
 use regex::RegexSet;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
@@ -19,7 +19,7 @@ fn is_mobile() -> bool {
         "/Windows Phone/i",
     ])
     .unwrap();
-    mobile_agents.matches(&user_agent).len() != 0
+    mobile_agents.is_match(&user_agent)
 }
 
 pub struct Controller {
@@ -36,7 +36,6 @@ impl Controller {
     }
     fn add_listeners(&mut self) {
         let is_mobile = is_mobile();
-        log!(is_mobile);
         let window = window().unwrap_throw();
         if is_mobile {
             let document = window.document().unwrap_throw();
