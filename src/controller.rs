@@ -10,13 +10,13 @@ fn is_mobile() -> bool {
     let window = window().unwrap_throw();
     let user_agent = window.navigator().user_agent().unwrap_throw();
     let mobile_agents = RegexSet::new(&[
-        "/Android/i",
-        "/webOS/i",
-        "/iPhone/i",
-        "/iPad/i",
-        "/iPod/i",
-        "/BlackBerry/i",
-        "/Windows Phone/i",
+        r"(?i)Android",
+        r"(?i)webOS",
+        r"(?i)iPhone",
+        r"(?i)iPad",
+        r"(?i)iPod",
+        r"(?i)BlackBerry",
+        r"(?i)Windows Phone",
     ])
     .unwrap();
     mobile_agents.is_match(&user_agent)
