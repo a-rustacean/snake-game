@@ -41,6 +41,7 @@ jobs:
             </body>
           </html>
           EOL
+          tree dist
 
       - name: Deploy
         uses: crazy-max/ghaction-github-pages@v3
