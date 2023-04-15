@@ -1,0 +1,56 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      ["master"]
+
+
+env:
+  CARGO_TERM_COLOR: always
+
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [18.14.2]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Build
+        run: |
+          npm i -g wasm-pack
+          wasm-pack build --target web
+          cat > index.html <<EOL
+          <html lang="en">
+            <head>
+              <title>Snake game</title>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+            </head>
+            <body>
+              <script type="module">
+                import init from "./pkg/snake_game.js";
+                init()
+              </script>
+            </body>
+          </html>
+          EOL
+
+      - name: Deploy
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
