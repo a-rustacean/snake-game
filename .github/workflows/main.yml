@@ -25,7 +25,9 @@ jobs:
         run: |
           wasm-pack build --target web
           mkdir dist
-          mv pkg dist/src
+          mkdir dist/src
+          mv pkg/snake_game.js dist/src/
+          mv pkg/snake_game_bg.wasm dist/src/
           cat > dist/index.html <<EOL
           <html lang="en">
             <head>
@@ -41,6 +43,10 @@ jobs:
             </body>
           </html>
           EOL
+          cat > dist/README.md <<EOL
+          # About
+          This is the compiled and previewable version of [snake game](https://github.com/a-rustacean/snake-game) made by [dilshad](https://github.com/a-rustacean). Try it [here](https://a-rustacean.github.io/snake-game)
+          EOL
           tree dist
 
       - name: Deploy
@@ -48,6 +54,5 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: dist
-          keep_history: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
