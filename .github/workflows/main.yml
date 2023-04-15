@@ -24,7 +24,9 @@ jobs:
       - name: Build
         run: |
           wasm-pack build --target web
-          cat > index.html <<EOL
+          mkdir dist
+          mv pkg dist/
+          cat > dist/index.html <<EOL
           <html lang="en">
             <head>
               <title>Snake game</title>
