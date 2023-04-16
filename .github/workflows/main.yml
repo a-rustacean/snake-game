@@ -39,7 +39,7 @@ jobs:
             </head>
             <body>
               <script type="module">
-                import init from "./src/snake_game.js";
+                import init from "./src/snake_game.min.js";
                 init()
               </script>
             </body>
