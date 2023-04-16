@@ -2,7 +2,7 @@
 name = "snake-game"
 version = "0.1.0"
 edition = "2021"
-authers = ["Dilshad <dilshadplayingminecraft@outlook.com>"]
+authors = ["Dilshad <dilshadplayingminecraft@outlook.com>"]
 description = "a snake game"
 repository = "https://github.com/a-rustacean/snake-game"
 license = "MIT"

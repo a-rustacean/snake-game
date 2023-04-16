@@ -1,6 +1,5 @@
 use js_sys::Function;
 use std::cell::RefCell;
-use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use web_sys::window;
 mod controller;
@@ -16,7 +15,7 @@ const GAME_WIDTH: usize = 20;
 const GAME_HEIGHT: usize = 20;
 
 thread_local! {
-    static GAME: Rc<RefCell<SnakeGame>> = Rc::new(RefCell::new(SnakeGame::new(GAME_WIDTH, GAME_HEIGHT, 50)));
+    static GAME: RefCell<SnakeGame> = RefCell::new(SnakeGame::new(GAME_WIDTH, GAME_HEIGHT, 50));
     static TICK_CLOSURE: Closure<dyn FnMut()> = Closure::wrap(Box::new(|| {
         GAME.with(|game| {
             RENDERER.with(|renderer| {
@@ -35,9 +34,8 @@ thread_local! {
         score: 0
     });
     static CONTROLLER: Controller = Controller::new(Box::new({
-        let game = GAME.with(|game| game.clone());
         move |direction| {
-            game.borrow_mut().change_direction(direction);
+            GAME.with(|game| game.borrow_mut().change_direction(direction));
         }
     }) as Box<dyn FnMut(Direction)>);
 }
