@@ -119,7 +119,10 @@ impl Renderer {
             }
         };
         display.set_inner_html("");
-        score_counter.set_inner_html(&format!("score: {}<br>high score: {}", self.score, self.high_score));
+        score_counter.set_inner_html(&format!(
+            "score: {}<br>high score: {}",
+            self.score, self.high_score
+        ));
 
         for y in 0..self.height {
             for x in 0..self.width {
