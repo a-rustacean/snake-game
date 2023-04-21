@@ -24,7 +24,6 @@ thread_local! {
                 game.borrow_mut().tick();
                 let game = game.borrow();
                 renderer.score = game.snake.len() - 1;
-                renderer.render(&*game);
                 if game.finished {
                     INTERVAL_ID.with(|interval_id| {
                         let interval_id = *interval_id.borrow();
@@ -37,6 +36,7 @@ thread_local! {
                     let _ = save_game_data(GameData { high_score: renderer.score });
                     renderer.high_score = renderer.score;
                 }
+                renderer.render(&*game);
             })
         })
     }));
@@ -64,7 +64,6 @@ thread_local! {
                                 let renderer = &mut *renderer.borrow_mut();
                                 game.tick();
                                 renderer.score = game.snake.len() - 1;
-                                renderer.render(&*game);
                                 if game.finished {
                                     if let Some(id) = *interval_id {
                                         window().unwrap_throw().clear_interval_with_handle(id);
@@ -74,7 +73,8 @@ thread_local! {
                                 if renderer.score > renderer.high_score {
                                     let _ = save_game_data(GameData { high_score: renderer.score });
                                     renderer.high_score = renderer.score;
-                                }
+                                };
+                                renderer.render(&*game);
                             });
 
                             if let Some(id) = *interval_id {
