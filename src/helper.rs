@@ -1,4 +1,5 @@
-use std::ops::Add;
+use std::rc::Rc;
+use std::{cell::RefCell, ops::Add};
 use wasm_bindgen::prelude::*;
 
 #[allow(unused_macros)]
@@ -15,7 +16,7 @@ macro_rules! onclick {
         let onclick = Closure::wrap(Box::new($onclick) as Box<dyn FnMut()>);
         $element.set_onclick(onclick.as_ref().dyn_ref());
         onclick.forget();
-    }
+    };
 }
 
 #[wasm_bindgen]
@@ -33,9 +34,9 @@ macro_rules! log {
     }
 }
 
-pub(crate) use style;
 pub(crate) use onclick;
-pub(crate) use log;
+pub(crate) use style;
+// pub(crate) use log;
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub struct Vector(pub isize, pub isize);
@@ -47,3 +48,5 @@ impl Add<Vector> for &Vector {
         Vector(self.0 + rhs.0, self.1 + rhs.1)
     }
 }
+
+pub type CallbackFn<T> = Rc<RefCell<Box<dyn FnMut(T)>>>;

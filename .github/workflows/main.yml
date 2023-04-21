@@ -30,6 +30,7 @@ jobs:
           terser pkg/snake_game.js --compress --mangle -o dist/src/snake_game.min.js 
           mv pkg/snake_game.js dist/src/
           mv pkg/snake_game_bg.wasm dist/src/
+          cp -r assets dist/
           cat > dist/index.html <<EOL
           <html lang="en">
             <head>

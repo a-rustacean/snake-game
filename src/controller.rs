@@ -1,4 +1,4 @@
-use crate::helper::{onclick, style};
+use crate::helper::{onclick, style, CallbackFn};
 use regex::RegexSet;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
@@ -9,7 +9,7 @@ use crate::snake::Direction;
 fn is_mobile() -> bool {
     let window = window().unwrap_throw();
     let user_agent = window.navigator().user_agent().unwrap_throw();
-    let mobile_agents = RegexSet::new(&[
+    let mobile_agents = RegexSet::new([
         r"(?i)Android",
         r"(?i)webOS",
         r"(?i)iPhone",
@@ -23,7 +23,7 @@ fn is_mobile() -> bool {
 }
 
 pub struct Controller {
-    oninput: Rc<RefCell<Box<dyn FnMut(Direction)>>>,
+    oninput: CallbackFn<Direction>,
 }
 
 impl Controller {

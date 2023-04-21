@@ -1,4 +1,4 @@
-use crate::helper::Vector;
+use crate::helper::{CallbackFn, Vector};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -9,8 +9,9 @@ pub struct Renderer {
     pub width: usize,
     pub height: usize,
     pub pixel_size: usize,
-    pub onclick: Option<Rc<RefCell<Box<dyn FnMut(Vector)>>>>,
+    pub onclick: Option<CallbackFn<Vector>>,
     pub score: usize,
+    pub high_score: usize,
 }
 
 #[allow(dead_code)]
@@ -20,6 +21,7 @@ impl Renderer {
         height: usize,
         pixel_size: usize,
         onclick: Option<Box<dyn FnMut(Vector)>>,
+        high_score: usize,
     ) -> Self {
         let mut renderer = Self {
             width,
@@ -27,9 +29,10 @@ impl Renderer {
             pixel_size,
             onclick: None,
             score: 0,
+            high_score,
         };
-        if onclick.is_some() {
-            renderer.onclick = Some(Rc::new(RefCell::new(onclick.unwrap())));
+        if let Some(onclick) = onclick {
+            renderer.onclick = Some(Rc::new(RefCell::new(onclick)));
         }
         renderer
     }
@@ -47,6 +50,7 @@ impl Default for Renderer {
             pixel_size: 30,
             onclick: None,
             score: 0,
+            high_score: 0,
         }
     }
 }

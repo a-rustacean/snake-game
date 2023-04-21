@@ -17,3 +17,6 @@ Cargo.lock
 
 # Compiled wasm
 pkg/
+
+# html file for testing
+index.html
