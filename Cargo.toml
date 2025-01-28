@@ -33,4 +33,4 @@ features = [
 ]
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
-rand = "0.8.5"
+rand = "0.9.0"
